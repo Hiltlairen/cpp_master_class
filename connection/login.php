@@ -5,10 +5,10 @@ session_start();
 // Verificar si se han enviado datos por POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Datos de conexión a la base de datos MySQL
-    $servername = "localhost";  // Nombre del servidor MySQL
-    $username = "id22324152_admincpp";   // Usuario de MySQL
-    $password = "admin_23CPP"; // Contraseña de MySQL
-    $dbname = "id22324152_cppmasterclass"; // Nombre de la base de datos
+    $servername = "bssnptl9dvpygafwf9fl-mysql.services.clever-cloud.com";
+    $username = "uuvq2s06nsgfgym0";
+    $password = "oJEW6OdzxwCywhHpI3eX";
+    $dbname = "bssnptl9dvpygafwf9fl";
     
     // Crear conexión a la base de datos
     $conn = new mysqli($servername, $username, $password, $dbname);

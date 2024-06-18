@@ -1,9 +1,9 @@
 <?php
 // Datos de conexión a la base de datos MySQL
-$servername = "localhost";
-$username = "id22324152_admincpp";
-$password = "admin_23CPP";
-$dbname = "id22324152_cppmasterclass";
+$servername = "bssnptl9dvpygafwf9fl-mysql.services.clever-cloud.com";
+$username = "uuvq2s06nsgfgym0";
+$password = "oJEW6OdzxwCywhHpI3eX";
+$dbname = "bssnptl9dvpygafwf9fl";
 
 // Crear conexión a la base de datos
 $conn = new mysqli($servername, $username, $password, $dbname);
