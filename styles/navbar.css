@@ -1,0 +1,29 @@
+.navbar {
+    background-color: #444;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between; /* Para distribuir los elementos horizontalmente */
+    align-items: center; /* Para centrar verticalmente los elementos */
+    padding: 10px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.logo {
+    display: flex;
+    align-items: center; /* Para centrar verticalmente el logo */
+}
+
+.navbar-title {
+    flex-grow: 1; /* El título ocupa todo el espacio disponible */
+    text-align: center; /* Para centrar el texto */
+}

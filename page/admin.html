@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador</title>
+    <link rel="stylesheet" href="../styles/admin.css">
+</head>
+<body>
+    <iframe src="../components/navbar.html" frameborder="0" class="navbar-export"></iframe>
+    <div class="admin-container">
+        <h2>Panel de Administración</h2>
+        <div class="student-list-container">
+            <h3>Lista de Estudiantes</h3>
+            <div class="student-list">
+                <!-- Aquí se generarán los nombres de los estudiantes con el botón editar -->
+            </div>
+        </div>
+        <button class="add-student-button" onclick="location.href = './estudent_created.html'">Agregar Nuevo Estudiante</button>
+        
+        <div class="teacher-list-container">
+            <h3>Lista de Docentes</h3>
+            <div class="teacher-list">
+                <!-- Aquí se generarán los nombres de los docentes con el botón editar -->
+            </div>
+        </div>
+        <button class="add-teacher-button">Agregar Nuevo Docente</button>
+    </div>
+
+    <!-- Modal para editar estudiante -->
+    <div id="edit-student-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>Editar Estudiante</h3>
+            <form id="edit-student-form">
+                <input type="hidden" id="edit-student-id" name="id_usuario">
+                <label for="edit-student-name">Nombre:</label>
+                <input type="text" id="edit-student-name" name="nombre" required>
+                <label for="edit-student-email">Correo:</label>
+                <input type="email" id="edit-student-email" name="correo" required>
+                <label for="edit-student-password">Contraseña:</label>
+                <input type="password" id="edit-student-password" name="password" required>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para editar docente -->
+    <div id="edit-teacher-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>Editar Docente</h3>
+            <form id="edit-teacher-form">
+                <input type="hidden" id="edit-teacher-id" name="id_usuario">
+                <label for="edit-teacher-name">Nombre:</label>
+                <input type="text" id="edit-teacher-name" name="nombre" required>
+                <label for="edit-teacher-email">Correo:</label>
+                <input type="email" id="edit-teacher-email" name="correo" required>
+                <label for="edit-teacher-password">Contraseña:</label>
+                <input type="password" id="edit-teacher-password" name="password" required>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Función para cargar los datos de los estudiantes
+        function loadStudents() {
+            fetch('../connection/get_student.php')  // Cambia esta ruta si es necesario
+                .then(response => response.json())
+                .then(data => {
+                    const studentList = document.querySelector('.student-list');
+                    studentList.innerHTML = ''; // Limpiar cualquier contenido existente
+                    data.forEach(student => {
+                        const studentItem = document.createElement('div');
+                        studentItem.classList.add('student-item');
+                        studentItem.innerHTML = `
+                            <span class="student-name">${student.nombre}</span>
+                            <span class="student-email">${student.correo}</span>
+                            <button class="edit-button" data-id="${student.id_usuario}" data-name="${student.nombre}" data-email="${student.correo}">Editar</button>
+                        `;
+                        studentList.appendChild(studentItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Función para cargar los datos de los docentes
+        function loadTeachers() {
+            fetch('../connection/get_teacher.php')  // Cambia esta ruta si es necesario
+                .then(response => response.json())
+                .then(data => {
+                    const teacherList = document.querySelector('.teacher-list');
+                    teacherList.innerHTML = ''; // Limpiar cualquier contenido existente
+                    data.forEach(teacher => {
+                        const teacherItem = document.createElement('div');
+                        teacherItem.classList.add('teacher-item');
+                        teacherItem.innerHTML = `
+                            <span class="teacher-name">${teacher.nombre}</span>
+                            <span class="teacher-email">${teacher.correo}</span>
+                            <button class="edit-button" data-id="${teacher.id_usuario}" data-name="${teacher.nombre}" data-email="${teacher.correo}">Editar</button>
+                        `;
+                        teacherList.appendChild(teacherItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Manejar la apertura del modal de edición para estudiantes y docentes
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('edit-button')) {
+                const id = e.target.getAttribute('data-id');
+                const name = e.target.getAttribute('data-name');
+                const email = e.target.getAttribute('data-email');
+                const isTeacher = e.target.closest('.teacher-item') !== null;
+
+                if (isTeacher) {
+                    document.getElementById('edit-teacher-id').value = id;
+                    document.getElementById('edit-teacher-name').value = name;
+                    document.getElementById('edit-teacher-email').value = email;
+                    document.getElementById('edit-teacher-modal').style.display = 'block';
+                } else {
+                    document.getElementById('edit-student-id').value = id;
+                    document.getElementById('edit-student-name').value = name;
+                    document.getElementById('edit-student-email').value = email;
+                    document.getElementById('edit-student-modal').style.display = 'block';
+                }
+            }
+        });
+
+        // Manejar el cierre del modal
+        document.querySelectorAll('.close-button').forEach(button => {
+            button.onclick = function() {
+                document.getElementById('edit-student-modal').style.display = 'none';
+                document.getElementById('edit-teacher-modal').style.display = 'none';
+            };
+        });
+
+        // Manejar el envío del formulario de edición para estudiantes
+        document.getElementById('edit-student-form').onsubmit = function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('../connection/update_student.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Estudiante actualizado correctamente');
+                    loadStudents();  // Recargar la lista de estudiantes
+                    document.getElementById('edit-student-modal').style.display = 'none';
+                } else {
+                    alert('Error al actualizar el estudiante: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+
+        // Manejar el envío del formulario de edición para docentes
+        document.getElementById('edit-teacher-form').onsubmit = function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('../connection/update_teacher.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Docente actualizado correctamente');
+                    loadTeachers();  // Recargar la lista de docentes
+                    document.getElementById('edit-teacher-modal').style.display = 'none';
+                } else {
+                    alert('Error al actualizar el docente: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+
+        // Cargar los datos cuando la página se cargue
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudents();
+            loadTeachers();
+        });
+    </script>
+</body>
+</html>

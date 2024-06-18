@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/navbar.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="../assets/logo.png" alt="Logo" width="20" height="20">
+        </div>
+        <div class="navbar-title">
+            <a href="#" id="index-link">Aprende CPP</a>
+        </div>
+        <div class="navbar-links">
+            <a href="#" id="login-link">Login</a>
+            <a href="#" id="index2-link">Inicio</a>
+
+            <!-- Otros enlaces si los hubiera -->
+        </div>
+    </nav>
+
+    <!-- Añadimos el script aquí -->
+    <script>
+        document.getElementById('login-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            window.top.location.href = '../page/login.html';
+        });
+        document.getElementById('index-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            window.top.location.href = '../index.html';
+        });
+        document.getElementById('index2-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            window.top.location.href = '../index.html';
+        });
+    </script>
+</body>
+</html>
